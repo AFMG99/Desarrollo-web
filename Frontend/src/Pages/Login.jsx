@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../Service/Services';
-import '../assets/css/estilos.css'
+import '../assets/css/estilos.css';
 import imagen from '../../src/assets/img/oficina.jpg';
 import imagen2 from '../../src/assets/img/facebook.png';
 import imagen3 from '../../src/assets/img/x.png';
@@ -27,6 +27,9 @@ function Login() {
             if (result.token) {
                 localStorage.setItem('token', result.token);
                 localStorage.setItem('username', username);
+                if (result.idUsuario) {
+                    localStorage.setItem('idUsuario', result.idUsuario);
+                }
                 setErrorMessage('');
                 alert('Inicio de sesión exitoso');
                 navigate('/home');
@@ -92,9 +95,9 @@ function Login() {
                             </div>
                         </form>
 
-                        <div className="text-center mt-4">
+                        {/* <div className="text-center mt-4">
                             <p>¿No tienes cuenta? Ir a <Link to="/registro" className="text-success">Registro</Link></p>
-                        </div>
+                        </div> */}
 
                         <div className="d-flex justify-content-center mt-3">
                             <button className="btn btn-outline-success me-2">

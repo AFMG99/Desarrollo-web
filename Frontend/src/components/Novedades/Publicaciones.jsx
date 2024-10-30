@@ -8,19 +8,19 @@ const Publicaciones = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchPublicaciones = async () => {
-            try {
-                const response = await getAllPublicaciones();
-                setPublicaciones(response);
-            } catch (err) {
-                setError('Error al obtener las publicaciones');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchPublicaciones();
     }, []);
+    
+    const fetchPublicaciones = async () => {
+        try {
+            const response = await getAllPublicaciones();
+            setPublicaciones(response);
+        } catch (err) {
+            setError('Error al obtener las publicaciones');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const obtenerRespuestas = async (idPublicacion) => {
         try {

@@ -22,7 +22,7 @@ const Navegacion = () => {
                 <Link className="nav-link" aria-current="page" to="/home">Principal</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/servicios">Servicios</Link>
+                <Link className="nav-link" to="/user">Usuarios</Link>
               </li>
             </ul>
           </div>

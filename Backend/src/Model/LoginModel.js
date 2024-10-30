@@ -1,13 +1,28 @@
 import { getConnection, sql } from "../Config/Connection.js";
 
-const getAllLogin = async () => {
+const getAllUsuarios = async () => {
     try {
         const resultado = await sql.query('SELECT * FROM Usuarios');
-        return resultado.recordset
+        return resultado.recordset;
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
+
+const authenticateUser = async (username, password) => {
+    try {
+        await getConnection();
+
+        const result = await new sql.Request()
+            .input('username', sql.VarChar, username)
+            .input('password', sql.VarChar, password)
+            .query('SELECT * FROM Usuarios WHERE nombreUsuario = @username AND contrasena = @password');
+
+        return result.recordset;
+    } catch (error) {
+        throw new Error('Error en la consulta SQL: ' + error.message);
+    }
+};
 
 const cambiarContrasena = async (username, nuevaContrasena) => {
     await getConnection();
@@ -44,4 +59,4 @@ const cambiarContrasena = async (username, nuevaContrasena) => {
     return { message: 'Contraseña cambiada exitosamente.' };
 };
 
-export { getAllLogin, cambiarContrasena };
+export { getAllUsuarios, cambiarContrasena, authenticateUser };

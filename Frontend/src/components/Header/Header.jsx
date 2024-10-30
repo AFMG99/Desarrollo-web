@@ -5,7 +5,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const [perfil, setPerfil] = useState(null);
+  const [perfil, setPerfil] = useState({
+    nombreRol: 'Cargando...',
+    descripcion: 'Cargando...',
+    imagenUsuario: 'https://cdn-icons-png.flaticon.com/512/3135/3135768.png',
+    nombreUsuario: 'Cargando...',
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +18,24 @@ const Header = () => {
   }, []);
 
   const fetchPerfil = async () => {
+    const idUsuario = localStorage.getItem('idUsuario');
+    if (!idUsuario) {
+      console.error("ID de usuario no encontrado");
+      return;
+    }
+
     try {
-      const data = await getPerfilData();
-      setPerfil(data[1]); 
+      const data = await getPerfilData(idUsuario);
+      if (data.length > 0) {
+        setPerfil(data[0]);
+      } else {
+        setPerfil({
+          nombreRol: 'Usuario no encontrado',
+          descripcion: '',
+          imagenUsuario: 'https://cdn-icons-png.flaticon.com/512/3135/3135768.png',
+          nombreUsuario: 'Desconocido',
+        });
+      }
     } catch (error) {
       console.error('Error al cargar el perfil', error);
     }
@@ -23,12 +43,9 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/'); 
+    localStorage.removeItem('idUsuario');
+    navigate('/');
   };
-
-  if (!perfil) {
-    return <div>Loading....</div>;
-  }
 
   return (
     <header className="header d-flex align-items-center justify-content-between px-4 py-3 shadow-sm">
