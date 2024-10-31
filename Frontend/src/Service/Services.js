@@ -13,6 +13,17 @@ export const agregarPublicacion = async (publicacion) => {
     return response.data;
 }
 
+export const removePublicacion = async (idPublicacion) => {
+    const response = await axios.delete(`${API_URL}publicacion/${idPublicacion}`);
+    return response.data;
+}
+
+export const modificarPublicacion = async (publicacion) => {
+    const { id, titulo, contenido, estado } = publicacion;
+    const response = await axios.put(`${API_URL}publicacion/${id}`, { titulo, contenido, estado });
+    return response.data;
+};
+
 // modulos de Respuestas
 export const getRespuestasPorPublicacion = async (idPublicacion) => {
     const response = await axios.get(`${API_URL}respuestas?idPublicacion=${idPublicacion}`);
@@ -24,14 +35,24 @@ export const agregarRespuesta = async (respuesta) => {
     return response.data;
 }
 
+export const removeRespuesta = async (idRespuesta) => {
+    const response = await axios.delete(`${API_URL}respuesta/${idRespuesta}`);
+    return response.data;
+}
+
 // modulos de Comentarios
 export const getComentarios = async (idRespuesta) => {
     const response = await axios.get(`${API_URL}comentarios?idRespuesta=${idRespuesta}`);
     return response.data;
 }
 
-export const agregarComentario = async (contenido, idRespuesta, idUsuario) => {
-    const response = await axios.post(`${API_URL}comentario`, { contenido, idRespuesta, idUsuario });
+export const agregarComentario = async (comentario) => {
+    const response = await axios.post(`${API_URL}comentario`, comentario);
+    return response.data;
+}
+
+export const removeComentario = async (idComentario) => {
+    const response = await axios.delete(`${API_URL}comentario/${idComentario}`);
     return response.data;
 }
 

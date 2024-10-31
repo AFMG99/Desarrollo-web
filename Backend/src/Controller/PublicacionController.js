@@ -1,4 +1,15 @@
-import { getAllPublicaciones, agregarNuevaPublicacion, getRespuestaPorPublicacion, agregarNuevaRespuesta, getComentariosPorRespuesta, agregarNuevoComentario  } from "../Model/PublicacionModel.js"
+import { 
+    getAllPublicaciones, 
+    agregarNuevaPublicacion,
+    actualizarPublicacion, 
+    getRespuestaPorPublicacion, 
+    agregarNuevaRespuesta, 
+    getComentariosPorRespuesta, 
+    agregarNuevoComentario,
+    deletePublicacion,  
+    deleteRespuesta,
+    deleteComentario
+} from "../Model/PublicacionModel.js"
 
 const getAllPublic = async ( req, res) => {
     try {
@@ -15,8 +26,28 @@ const agregarPublicacion = async (req, res) => {
         const resultado = await agregarNuevaPublicacion({titulo, contenido, idUsuario, estado});
         res.json(resultado);
     } catch (error) {
-        console.error('Error al ingresar Publicación:', error);
         res.status(500).json({ message: 'Error al crear la publicación', error: error.message });
+    }
+};
+
+const modificarPublicacion = async (req, res) => {
+    const { id } = req.params;
+    const { titulo, contenido, estado } = req.body;
+    console.log('Datos que se van a actualizar', req.body);
+    try {
+        const resultado = await actualizarPublicacion({ id, titulo, contenido, estado });
+        res.json(resultado);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar la publicación', error: error.message });
+    }
+};
+
+const removePublicacion = async (req, res) => {
+    try {  
+        await deletePublicacion(req.params.id);
+        res.status(200).json({ message: 'Publicación eliminada con éxito' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar la publicación', error: error.message });
     }
 };
 
@@ -43,6 +74,15 @@ const agregarRespuesta = async (req, res) => {
     }
 };
 
+const removeRespuesta = async (req, res) => {
+    try {
+        await deleteRespuesta(req.params.id);
+        res.status(200).json({ message: 'Respuesta eliminada con éxito' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar la respuesta', error: error.message });
+    }
+};
+
 const getComentarios = async (req, res) => {
     const { idRespuesta } = req.query;
     try {
@@ -54,14 +94,34 @@ const getComentarios = async (req, res) => {
 };
 
 const agregarComentario = async (req, res) => {
-    const { contenido, idRespuesta, idUsuario } = req.body;
-
+    const { idRespuesta, idUsuario, contenido } = req.body;
+    console.log('Datos de la pagina:', req.body);
     try {
-        const resultado = await agregarNuevoComentario(contenido, idRespuesta, idUsuario);
-        res.status(201).json({ message: 'Comentario agregado exitosamente', data: resultado });
+        const resultado = await agregarNuevoComentario({idRespuesta, idUsuario, contenido});
+        res.json(resultado);
     } catch (error) {
         res.status(500).json({ message: 'Error al agregar el comentario', error: error.message });
     }
 };
 
-export { getAllPublic, agregarPublicacion, getRespuestas, agregarRespuesta, getComentarios, agregarComentario }
+const removeComentario = async (req, res) => {
+    try {
+        await deleteComentario(req.params.id);
+        res.status(200).json({ message: 'Comentario eliminado con éxito' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar el Comentario', error: error.message });
+    }
+};
+
+export { 
+    getAllPublic, 
+    agregarPublicacion, 
+    getRespuestas, 
+    agregarRespuesta, 
+    getComentarios, 
+    agregarComentario, 
+    removePublicacion, 
+    removeRespuesta,
+    removeComentario,
+    modificarPublicacion
+};

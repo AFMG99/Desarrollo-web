@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Barra from '../components/Admon/Barra';
 import Estadisticas from '../components/Admon/Estadisticas';
-import Paginacion from '../components/Admon/Paginacion';
 import imagen from '../../src/assets/img/graficoU.png';
 import imagen2 from '../../src/assets/img/estadisticasU.gif';
+import User from '../components/Admon/User'
 
-const Servicios = () => {
+const Admin = () => {
   const [componenteActual, setComponenteActual] = useState(null)
 
   const mostrarComponente = (componente) => {
@@ -15,10 +15,10 @@ const Servicios = () => {
   return (
     <div>
       <div className="row me-2">
-        <div className="col-4 barra">
+        <div className="col-2 barra">
           <Barra mostrarComponente={mostrarComponente} />
         </div>
-        <div className="col-8">
+        <div className="col-10">
           <div
             data-bs-spy="scroll"
             data-bs-target="#simple-list-example"
@@ -30,12 +30,14 @@ const Servicios = () => {
             {componenteActual === 'Estadisticas' && (
               <Estadisticas imagen={imagen} imagen2={imagen2} />
             )}
+            {componenteActual === 'Usuarios' && (
+              <User />
+            )}
           </div>
-          <Paginacion />
         </div>
       </div>
     </div>
   );
 };
 
-export default Servicios;
+export default Admin;

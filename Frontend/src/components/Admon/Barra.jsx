@@ -11,45 +11,12 @@ function Barra({ mostrarComponente }) {
                 >
                     Estadísticas
                 </a>
-
                 <a 
                     className="list-group-item list-group-item-action" 
-                    onClick={() => mostrarComponente('NumerosAnuncios')}
+                    onClick={() => mostrarComponente('Usuarios')}
                     style={{cursor: 'pointer'}}
                 >
-                    Número de Anuncios
-                </a>
-
-                <a 
-                    className="list-group-item list-group-item-action" 
-                    onClick={() => mostrarComponente('Interacciones')}
-                    style={{cursor: 'pointer'}}
-                >
-                    Interacciones
-                </a>
-
-                <a 
-                    className="list-group-item list-group-item-action" 
-                    onClick={() => mostrarComponente('TiempoPagina')}
-                    style={{cursor: 'pointer'}}
-                >
-                    Tiempo en la página
-                </a>
-                
-                <a 
-                    className="list-group-item list-group-item-action" 
-                    onClick={() => mostrarComponente('RetornoUsuarios')}
-                    style={{cursor: 'pointer'}}
-                >
-                    Retorno de usuarios
-                </a>
-                
-                <a 
-                    className="list-group-item list-group-item-action" 
-                    onClick={() => mostrarComponente('AnunciosDestacados')}
-                    style={{cursor: 'pointer'}}
-                >
-                    Anuncios destacados
+                    Usuarios
                 </a>
             </div>
         </div>

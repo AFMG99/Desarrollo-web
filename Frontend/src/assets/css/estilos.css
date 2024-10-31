@@ -81,10 +81,9 @@
 }
 
 .busqueda .input-busqueda {
-    width: 80%;
+    width: 100%;
 }
 
-.busqueda select,
 .busqueda input {
     padding: 10px;
     font-size: 1rem;
@@ -96,6 +95,34 @@
     padding: 10px;
     border: none;
     cursor: pointer;
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 0.5;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    cursor: pointer;
+    padding: 4px;
+    margin: 0;
+    font-size: 20px;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
 }
 
 .imagen {
@@ -144,7 +171,7 @@
     border-radius: 50px;
     margin: auto;
     width: 60%;
-    height: 70%;
+    height: 60%;
 }
 
 .div {
@@ -268,4 +295,37 @@
 
 .container-estadistica {
     margin: 10px;
+}
+
+.user-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-container h2 {
+    color: #6c757d;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table thead {
+    background-color: #563d7c;
+    color: #fff;
+}
+
+.table-bordered {
+    border: 2px solid #dee2e6;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+    cursor: pointer;
+}
+
+.table th, .table td {
+    vertical-align: middle;
 }

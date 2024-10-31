@@ -1,28 +1,108 @@
-import React from 'react'
-import TablaEstadisticas from './TablaEstadisticas'
-import GraficoUsuarios from './GraficosUsuario'
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+    getAllPublicaciones,
+    getRespuestasPorPublicacion,
+    removePublicacion,
+} from '../../Service/Services';
+import Swal from 'sweetalert2';
+import StatCard from './StatCard';
+import PublicationsTable from './PublicationsTable';
 
-function Estadisticas({imagen, imagen2}) {
+const fetchData = async (fetchFunction, ...params) => {
+    try {
+        return await fetchFunction(...params);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+};
+
+const AdminPanel = () => {
+    const [publicaciones, setPublicaciones] = useState([]);
+    const [respuestas, setRespuestas] = useState({});
+    const [showDetalles, setShowDetalles] = useState(null);
+
+    useEffect(() => {
+        fetchPublicaciones();
+    }, []);
+
+    const fetchPublicaciones = async () => {
+        const data = await fetchData(getAllPublicaciones);
+        if (data) {
+            const formattedData = data.map(pub => ({
+                ...pub,
+                fecha: new Date(pub.fechaCreacion).toLocaleDateString(),
+            }));
+            setPublicaciones(formattedData);
+        }
+    };
+
+    const estadisticas = useMemo(() => {
+        const totalPublicaciones = publicaciones.length;
+        const publicacionesActivas = publicaciones.filter(pub => pub.estado === 1).length;
+        const totalRespuestas = Object.values(respuestas).flat().length;
+        return { totalPublicaciones, publicacionesActivas, totalRespuestas };
+    }, [publicaciones, respuestas]);
+
+    const verDetallesPublicacion = useCallback(async (idPublicacion) => {
+        const data = await fetchData(getRespuestasPorPublicacion, idPublicacion);
+        if (data) {
+            setRespuestas(prev => ({ ...prev, [idPublicacion]: data }));
+            setShowDetalles(idPublicacion);
+        }
+    }, []);
+
+    const eliminarPublicacion = useCallback(async (id) => {
+        const confirm = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar'
+        });
+        if (confirm.isConfirmed) {
+            await fetchData(removePublicacion, id);
+            fetchPublicaciones();
+        }
+    }, []);
+
     return (
-        <div id='simple-list-item-1'>
-            <h4 className='text-center'>Estadísticas de Ingreso de Usuarios</h4>
-            <p className="text-center">
-                A continuación se presentan las estadísticas de ingreso de usuarios en el último mes.
-            </p>
-            <div className="text-center mb-4">
-                <img src={imagen2} alt="Estadísticas" className="img-fluid" />
+        <div className="bg-light min-vh-100">
+            <div className="container-fluid py-4">
+                <div className="row mb-4">
+                    <div className="col-12">
+                        <h1 className="h3 mb-0 text-primary">Panel de Administración</h1>
+                    </div>
+                </div>
+                <div className="row mb-4 g-3">
+                    <StatCard
+                        icon="bi bi-file-post"
+                        title="Total Publicaciones"
+                        value={estadisticas.totalPublicaciones}
+                        subtitle={`Última actualización: ${new Date().toLocaleDateString()}`}
+                    />
+                    <StatCard
+                        icon="bi bi-chat-dots"
+                        title="Total Respuestas"
+                        value={estadisticas.totalRespuestas}
+                        subtitle={`Promedio: ${(estadisticas.totalPublicaciones > 0) ? (estadisticas.totalRespuestas / estadisticas.totalPublicaciones).toFixed(1) : 0} por publicación`}
+                    />
+                </div>
+                <div className="card shadow-sm">
+                    <div className="card-body">
+                        <PublicationsTable
+                            publicaciones={publicaciones}
+                            respuestas={respuestas}
+                            onViewDetails={verDetallesPublicacion}
+                            onDelete={eliminarPublicacion}
+                        />
+                    </div>
+                </div>
             </div>
-
-            <h5>Resumen General</h5>
-            <TablaEstadisticas />
-
-            <h5 className="mt-4">Gráfico de Usuarios Nuevos</h5>
-            <GraficoUsuarios imagen={imagen} />
-
-            <h5 className="mt-4">Análisis de Tendencias</h5>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam optio, deleniti laboriosam possimus eaque tenetur veniam! Voluptas, quis labore. Inventore eum eaque expedita hic eligendi.</p>
         </div>
-    )
-}
+    );
+};
 
-export default Estadisticas
+export default AdminPanel;

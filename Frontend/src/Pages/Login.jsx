@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../Service/Services';
 import '../assets/css/estilos.css';
-import imagen from '../../src/assets/img/oficina.jpg';
-import imagen2 from '../../src/assets/img/facebook.png';
-import imagen3 from '../../src/assets/img/x.png';
-import imagen4 from '../../src/assets/img/google.png';
+import imagen from '../../src/assets/img/Logo_web.png';
+import Swal from 'sweetalert2';
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -17,7 +15,12 @@ function Login() {
         e.preventDefault();
 
         if (!username || !password) {
-            alert('Por favor, complete todos los campos.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos incompletos',
+                text: 'Por favor, complete todos los campos',
+                confirmButtonText: 'Aceptar'
+            });
             return;
         }
 
@@ -31,16 +34,34 @@ function Login() {
                     localStorage.setItem('idUsuario', result.idUsuario);
                 }
                 setErrorMessage('');
-                alert('Inicio de sesión exitoso');
-                navigate('/home');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    text: '¡Bienvenido!',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => navigate('/home'));
             } else {
                 setErrorMessage('Usuario o contraseña incorrectos');
             }
         } catch (error) {
-            console.error('Error en el login:', error);
-            setErrorMessage('Error en el servidor. Por favor, intente más tarde.');
+            setErrorMessage('Usuario o contraseña incorrectos.');
         }
     };
+
+    const handleNewPassword = (e) => {
+        e.preventDefault();
+        if (!username) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Usuario requerido',
+                text: 'Por favor, digita el usuario.',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+        navigate('/cambiar-contrasena', { state: { username } });
+
+    }
 
     return (
         <div className="container-fluid login-page">
@@ -82,34 +103,10 @@ function Login() {
 
                             <button type="submit" className="btn btn-success w-100 mb-3">Login</button>
 
-                            <div className="d-flex justify-content-between">
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id="remember"
-                                    />
-                                    <label className="form-check-label" htmlFor="remember">Recordar</label>
-                                </div>
-                                <Link to="/cambiar-contrasena" className="text-success">¿Olvidaste tu Contraseña?</Link>
+                            <div className="d-flex justify-content-center">
+                                <a onClick={handleNewPassword} className='text-success linkNewPassword'>¿Olvidaste tu Contraseña?</a>
                             </div>
                         </form>
-
-                        {/* <div className="text-center mt-4">
-                            <p>¿No tienes cuenta? Ir a <Link to="/registro" className="text-success">Registro</Link></p>
-                        </div> */}
-
-                        <div className="d-flex justify-content-center mt-3">
-                            <button className="btn btn-outline-success me-2">
-                                <img src={imagen2} alt="facebook" />
-                            </button>
-                            <button className="btn btn-outline-success me-2">
-                                <img src={imagen3} alt="x" />
-                            </button>
-                            <button className="btn btn-outline-success">
-                                <img src={imagen4} alt="google" />
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

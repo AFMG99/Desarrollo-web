@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getAllPublicaciones, getRespuestasPorPublicacion } from '../../Service/Services';
 
-const Publicaciones = () => {
+const Publicaciones = ({ searchTerm }) => {
     const [publicaciones, setPublicaciones] = useState([]);
+    const [filteredPublicaciones, setFilteredPublicaciones] = useState([]);
     const [respuestas, setRespuestas] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -10,7 +11,14 @@ const Publicaciones = () => {
     useEffect(() => {
         fetchPublicaciones();
     }, []);
-    
+
+    useEffect(() => {
+        const filtered = publicaciones.filter(pub =>
+            pub.titulo.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredPublicaciones(filtered);
+    }, [searchTerm, publicaciones]);
+
     const fetchPublicaciones = async () => {
         try {
             const response = await getAllPublicaciones();
@@ -39,7 +47,7 @@ const Publicaciones = () => {
 
     return (
         <div className="container mt-4">
-            {publicaciones.map((pub) => (
+            {filteredPublicaciones.map((pub) => (
                 <div key={pub.id} className='card mb-3'>
                     <div className="card-body">
                         <div className='d-flex align-items-center mb-3'>

@@ -1,10 +1,18 @@
 import { getAllUsuarios, cambiarContrasena, authenticateUser } from "../Model/LoginModel.js";
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 const getAllUser = async (req, res) => {
     try {
         const usuarios = await getAllUsuarios();
-        res.json(usuarios)
+        const encryptedUsers = usuarios.map(usuario => {
+            const hash = crypto.createHash('sha1').update(usuario.contrasena).digest('hex');
+            return {
+                ...usuario,
+                contrasena: hash,
+            };
+        });
+        res.json(encryptedUsers);
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -12,11 +20,6 @@ const getAllUser = async (req, res) => {
 
 const login = async (req, res) => {
     const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Por favor ingrese username y password' });
-    }
-    console.log('Datos recibidos:', username, password);
     try {
         const data = await authenticateUser(username, password);
         console.log('Resultado de la consulta:', data);
@@ -40,12 +43,6 @@ const login = async (req, res) => {
 
 const contrasena = async (req, res) => {
     const { username, nuevaContrasena } = req.body;
-    console.log('Datos recibidos para cambio de contraseña:', username, nuevaContrasena);
-
-    if (!username || !nuevaContrasena) {
-        return res.status(400).json({ message: 'Por favor complete todos los campos.' });
-    }
-
     try {
         const resultado = await cambiarContrasena(username, nuevaContrasena);
         res.json(resultado);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Comentarios = ({ comentarios, onAgregarComentario }) => {
+const Comentarios = ({ comentarios, onAgregarComentario, onEliminarComentario }) => {
   const [comentarioContenido, setComentarioContenido] = useState('');
 
   const handleSubmit = () => {
@@ -17,9 +17,15 @@ const Comentarios = ({ comentarios, onAgregarComentario }) => {
           <div className="card-body">
             <div className='d-flex align-items-center mb-1'>
               <span><strong>{comentario.nombreUsuario}</strong></span>
-              <span className='position-absolute top-0 end-0'>{comentario.fechaCreacion}</span>
+              <span className='position-absolute top-1 end-0 me-3'>{comentario.fechaCreacion}</span>
             </div>
             <p className="card-text">{comentario.contenido}</p>
+            <button 
+                className="btn btn-danger mt-2" 
+                onClick={() => onEliminarComentario(comentario.id)}
+            >
+                Eliminar
+            </button>
           </div>
         </div>
       ))}
@@ -33,6 +39,7 @@ const Comentarios = ({ comentarios, onAgregarComentario }) => {
         />
       </div>
       <button onClick={handleSubmit} className="btn btn-primary mt-2">Agregar Comentario</button>
+
     </div>
   );
 };

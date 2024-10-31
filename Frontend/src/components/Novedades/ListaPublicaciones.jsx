@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import Respuestas from './Respuestas';
 
-const ListaPublicaciones = ({ publicaciones, onVerRespuestas, respuestasPorPublicacion, onAgregarRespuesta, onVerComentarios, comentariosPorRespuesta, onAgregarComentario }) => {
+const ListaPublicaciones = ({ 
+    publicaciones, 
+    onVerRespuestas,
+    onEliminarPublicacion, 
+    respuestasPorPublicacion, 
+    onAgregarRespuesta,
+    onEliminarRespuesta, 
+    onVerComentarios, 
+    comentariosPorRespuesta, 
+    onAgregarComentario,
+    onEliminarComentario
+}) => {
     const [mostrarRespuestas, setMostrarRespuestas] = useState({});
 
     const toggleRespuestas = (idPublicacion) => {
@@ -32,6 +43,12 @@ const ListaPublicaciones = ({ publicaciones, onVerRespuestas, respuestasPorPubli
                         >
                             {mostrarRespuestas[publicacion.id] ? 'Ocultar Respuestas' : 'Ver Respuestas'}
                         </button>
+                        <button
+                            className="btn btn-danger"
+                            onClick={() => onEliminarPublicacion(publicacion.id)}
+                        >
+                            Eliminar
+                        </button>
 
                         {mostrarRespuestas[publicacion.id] && (
                             <Respuestas
@@ -40,6 +57,9 @@ const ListaPublicaciones = ({ publicaciones, onVerRespuestas, respuestasPorPubli
                                 onVerComentarios={onVerComentarios}
                                 comentariosPorRespuesta={comentariosPorRespuesta}
                                 onAgregarComentario={onAgregarComentario}
+                                onEliminarRespuesta={onEliminarRespuesta}
+                                onEliminarComentario={onEliminarComentario}
+                                idPublicacion={publicacion.id}
                             />
                         )}
                     </div>
